@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app_demo/views/splash_page/splash_page.dart';
 import 'package:provider/provider.dart';
 
-import 'view_models/academy_list_view_model.dart';
+import 'features/academy_list_page/view_model/academy_list_view_model.dart';
+import 'features/splash_page/screen/splash_page.dart';
 
 void main() async {
-  // Bind Widgets to flutter engine
   WidgetsFlutterBinding.ensureInitialized();
+
   runApp(const MyApp());
 }
 
@@ -17,7 +17,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AcademyViewModel>(
+        /// GLOBAL VIEW MODELS (App-wide scope)
+        ChangeNotifierProvider(
           create: (_) {
             final vm = AcademyViewModel();
             vm.loadProjects();
@@ -27,8 +28,8 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: "Dynamic Offline Form",
-        theme: ThemeData(primarySwatch: Colors.blue),
+        title: "Flutter App Demo",
+        theme: ThemeData(primarySwatch: Colors.blue, scaffoldBackgroundColor: Colors.white),
         home: SplashPage(),
       ),
     );
