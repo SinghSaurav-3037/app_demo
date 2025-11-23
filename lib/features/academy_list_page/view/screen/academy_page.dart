@@ -18,7 +18,7 @@ class AcademyPage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              // refresh list
+              // refresh list to  get latest snapshot of data
               Provider.of<AcademyViewModel>(context, listen: false).refresh();
             },
           )

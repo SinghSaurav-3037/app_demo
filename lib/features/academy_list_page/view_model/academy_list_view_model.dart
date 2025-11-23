@@ -27,12 +27,12 @@ class AcademyViewModel extends ChangeNotifier {
       final online = await NetworkChecker.hasConnection();
 
       if (online) {
-        // Fetch ALL projects without filter
+        // Fetch ALL Data from Api
         final rawList = await _apiService.fetchProjects();
         final allProjects =
         rawList.map((json) => AcademyListModel.fromJson(json)).toList();
 
-        // Filter only for UI list
+        // Filter data
         final filteredProjects = allProjects
             .where((p) => p.status == "Active" && p.program == "SA")
             .toList();
@@ -41,23 +41,23 @@ class AcademyViewModel extends ChangeNotifier {
         await _dbService.clearProjects();
         await _dbService.insertProjects(allProjects);
 
-        // Show only filtered records online
+        // Show Latest sync records in online mode
         _projects = filteredProjects;
         _state = LoadState.success;
       } else {
-        // Offline: show ALL from DB
+        // show all records from db in offline mode
         final cached = await _dbService.getProjects();
         _projects = cached;
         _state = LoadState.success;
       }
     } catch (e) {
-      // If any error, use cache fallback
+      // If any error, load data from db
       try {
         final cached = await _dbService.getProjects();
         if (cached.isNotEmpty) {
           _projects = cached;
           _state = LoadState.success;
-          _errorMessage = "Loaded from cache due to error: $e";
+          _errorMessage = "Loaded from db due to error: $e";
         } else {
           _state = LoadState.error;
           _errorMessage = e.toString();
